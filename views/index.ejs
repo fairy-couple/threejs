@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <canvas id="canvas" width="700" height="500"></canvas>
+
+  <script type="importmap">
+    {
+        "imports": {
+          "three": "https://unpkg.com/three@0.138.3/build/three.module.js",
+          "GLTFLoader":
+          "https://unpkg.com/three@0.141.0/examples/jsm/loaders/GLTFLoader.js"
+        }
+      }
+    </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+  import { GLTFLoader } from "GLTFLoader";
+
+  let scene = new THREE.Scene();
+  let renderer = new THREE.WebGLRenderer({
+
+    canvas : document.querySelector('#canvas'),
+    antialias : true
+  })
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  let camera = new THREE.PerspectiveCamera(20,1);
+  camera.position.set(0,0,30);
+
+  scene.background = new THREE.Color('white')
+
+  var ambientLight = new THREE.AmbientLight(0x999999 );
+  scene.add(ambientLight);
+  
+  var lights = [];
+  lights[0] = new THREE.DirectionalLight( 0xffffff, 1 );
+  lights[0].position.set( 1, 0, 0 );
+  lights[1] = new THREE.DirectionalLight( 0x11E8BB, 1 );
+  lights[1].position.set( 0.75, 1, 0.5 );
+  lights[2] = new THREE.DirectionalLight( 0x8200C9, 1 );
+  lights[2].position.set( -0.75, -1, 0.5 );
+  scene.add( lights[0] );
+  scene.add( lights[1] );
+  scene.add( lights[2] );
+
+  let loader = new GLTFLoader();
+  loader.load('public/images/뚱이.gltf', function(gltf){
+    scene.add(gltf.scene);
+    
+    function animate(){
+      requestAnimationFrame(animate)
+      gltf.scene.rotation.y += 0.01;
+      gltf.scene.rotation.x += 0.01;
+      renderer.render(scene, camera);
+    }
+    animate()
+  });
+
+
+
+</script>
+
+</body>
+
+</html>
